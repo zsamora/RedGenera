@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Action to project balance -->
+    <record id="project_balance_graph" model="ir.actions.act_window">
+            <field name="name">Balance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.task</field> <!-- este define a cual resultado se llega -->
+            <field name="view_mode">graph</field>
+            <field name="context">{
+                'group_by': ['name'],
+                'search_default_project_id': [active_id],
+                'default_project_id': active_id,
+                'graph_measure':'planned_hours'
+            }</field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+    </record>
+
+    <!-- Project balance view -->
+    <record id="project_balance_graph_extend" model="ir.ui.view">
+       <field name="name">project.balance.graph.extend</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <graph string="Balance Graph">
+                <field name="subtask_planned_hours" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Add link to page in project kanban view -->
+    <record id="view_project_kanban_expense" model="ir.ui.view">
+            <field name="name">project.project.kanban.expense</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[contains(@class, 'o_project_kanban_boxes')]" position="inside">
+                    <a class="o_project_kanban_box" name="%(project_balance_graph)d" type="action">
+                        <div>
+                            <span class="o_label">Balance</span>
+                        </div>
+                    </a>
+                </xpath>
+            </field>
+    </record>
+
+    <!-- Modify expenses form view adding project and bank reference number -->
+    <record id="hr_expense_view_form_project" model="ir.ui.view">
+            <field name="name">hr.expense.view.form.project</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="before">
+                    <field name="project_id"/>
+                </field>
+                <field name="reference" position="before">
+                    <field name="bank_reference"/>
+                </field>
+            </field>
+    </record>
+
+    <!-- Modify expenses tree view adding project -->
+    <record id="view_expenses_tree_project" model="ir.ui.view">
+            <field name="name">hr.expense.tree.project</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="project_id"/>
+                </field>
+            </field>
+    </record>
+
+    <!-- Modify task form view adding budget -->
+    <record id="edit_project_task_budget" model="ir.ui.view">
+            <field name="name">project.task.form.budget</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <field name="planned_hours" position="after">
+                    <field name="planned_budget"/>
+                </field>
+            </field>
+    </record>
+
+    <!-- Modify project form view adding expenses -->
+    <record id="edit_project_expense" model="ir.ui.view">
+            <field name="name">project.project.form.expense</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="expense_id"/>
+                </field>
+            </field>
+    </record>
+</odoo>
