@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Action to project balance -->
+    <!-- Action to Project Graph -->
     <record id="project_balance_graph" model="ir.actions.act_window">
             <field name="name">Balance</field>
             <field name="type">ir.actions.act_window</field>
@@ -10,13 +10,13 @@
                 'group_by': ['name'],
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
-                'graph_measure':'planned_hours'
+                'graph_measure':'remaining_hours'
             }</field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
     </record>
 
-    <!-- Project balance view -->
-    <record id="project_balance_graph_extend" model="ir.ui.view">
+    <!-- Project Graph -->
+    <!--<record id="project_balance_graph_extend" model="ir.ui.view">
        <field name="name">project.balance.graph.extend</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
@@ -24,9 +24,9 @@
                 <field name="subtask_planned_hours" type="measure"/>
             </graph>
         </field>
-    </record>
+    </record>-->
 
-    <!-- Add link to page in project kanban view -->
+    <!-- Project Kanban -->
     <record id="view_project_kanban_expense" model="ir.ui.view">
             <field name="name">project.project.kanban.expense</field>
             <field name="model">project.project</field>
@@ -42,7 +42,7 @@
             </field>
     </record>
 
-    <!-- Modify expenses form view adding project and bank reference number -->
+    <!-- Expenses Form -->
     <record id="hr_expense_view_form_project" model="ir.ui.view">
             <field name="name">hr.expense.view.form.project</field>
             <field name="model">hr.expense</field>
@@ -57,7 +57,7 @@
             </field>
     </record>
 
-    <!-- Modify expenses tree view adding project -->
+    <!-- Expenses Tree -->
     <record id="view_expenses_tree_project" model="ir.ui.view">
             <field name="name">hr.expense.tree.project</field>
             <field name="model">hr.expense</field>
@@ -69,26 +69,63 @@
             </field>
     </record>
 
-    <!-- Modify task form view adding budget -->
-    <record id="edit_project_task_budget" model="ir.ui.view">
-            <field name="name">project.task.form.budget</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="arch" type="xml">
-                <field name="planned_hours" position="after">
-                    <field name="planned_budget"/>
-                </field>
-            </field>
-    </record>
-
-    <!-- Modify project form view adding expenses -->
-    <record id="edit_project_expense" model="ir.ui.view">
-            <field name="name">project.project.form.expense</field>
+    <!-- Project Form -->
+    <record id="edit_project_balance" model="ir.ui.view">
+            <field name="name">project.project.form.balance</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
-                    <field name="expense_id"/>
+                    <field name="selling_price"/>
+                    <field name="planned_hours"/>
+                    <field name="real_hours"/>
+                    <field name="hours_price"/>
+                    <field name="value_planned_hours"/>
+                    <field name="value_real_hours"/>
+                    <field name="progress" widget="progressbar"/>
+                    <field name="planned_expense"/>
+                    <field name="real_expense"/>
+                </field>
+            </field>
+    </record>
+
+    <!-- Project Form Simplified -->
+    <record id="project_project_view_form_simplified_balance" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified.balance</field>
+            <field name="model">project.project</field>
+            <field name="priority">1000</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="planned_hours"/>
+                    <field name="planned_expense"/>
+                </field>
+            </field>
+    </record>
+
+    <!-- Product Expense Form -->
+    <record id="product_product_expense_form_view_balance" model="ir.ui.view">
+        <field name="name">product.product.expense.form.balance</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+        <field name="arch" type="xml">
+            <field name="type" position="after">
+                <field name="store_id" />
+                <field name="categ_id"/>
+                <field name="document_type"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product Form -->
+    <record id="product_normal_form_view_balance" model="ir.ui.view">
+            <field name="name">product.product.form.balance</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="store_id" />
+                    <field name="document_type"/>
                 </field>
             </field>
     </record>
